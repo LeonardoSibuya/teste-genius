@@ -13,7 +13,7 @@ export const Colors = {
 }
 
 export const breakpoints = {
-    tablet: '1024px',
+    tablet: '1023px',
     celphone: '760px'
 }
 
@@ -40,5 +40,9 @@ export const Container = styled.div`
 
     @media (max-width: ${breakpoints.tablet}) {
         max-width: 95%;
+    }
+
+    @media (max-width: ${breakpoints.celphone}) {
+        max-width: 80%;
     }
 `

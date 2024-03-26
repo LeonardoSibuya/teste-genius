@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Colors } from "../../styles";
+import { Colors, breakpoints } from "../../styles";
 
 export const GeniusContainer = styled.div`
     margin-top: 40px;
@@ -7,6 +7,12 @@ export const GeniusContainer = styled.div`
     border-radius: 16px;
     width: 80%;
     position: relative;
+
+    @media (max-width: ${breakpoints.celphone}) {
+        margin: 24px auto;
+        padding: 16px;
+        width: 100%;
+    }
 `
 
 export const GeniusContent = styled.div`
@@ -23,6 +29,12 @@ export const GeniusContent = styled.div`
             filter: brightness(170%);
             transition: 0.2s ease;
             transform: scale(1.02);
+        }
+    }
+
+    @media (max-width: ${breakpoints.celphone}) {
+        div {
+            padding: 60px;
         }
     }
 `
@@ -98,6 +110,52 @@ export const GameInfos = styled.div`
         padding: 16px 0;
         font-weight: bold;
     }
+
+    @media (max-width: ${breakpoints.tablet}) {
+        left: 25%;
+        top: 25%;
+    }
+
+    @media (max-width: ${breakpoints.celphone}) {
+        left: 33%;
+        top: 30%;
+        height: 120px;
+        width: 120px;
+        gap: 2px;
+
+        input {
+            font-size: 10px;
+            padding: 4px;
+            width: 80%;
+
+            &::placeholder {
+                font-size: 8px;
+            }
+        }
+
+        button {
+            font-size: 8px;
+            padding: 4px;
+            width: 80%;
+
+            &.restartButton,
+            &.playAgainButton {
+                font-size: 6px;
+                padding: 4px;
+                width: 60%;
+            }
+
+            &.playAgainButton {
+                width: 75%;
+            }
+        }
+
+        p {
+            font-size: 8px;
+            text-align: center;
+            padding: 6px 0;
+        }
+    }
 `
 
 export const PlayerPoints = styled.p`
@@ -113,6 +171,13 @@ export const PlayerPoints = styled.p`
         font-size: 54px;
         color: ${Colors.lightgreen};
     }
+
+    @media (max-width: ${breakpoints.celphone}) {
+        span {
+            font-size: 24px;
+            margin: 0 auto;
+        }
+    }
 `
 
 export const CountdownContent = styled.span`
@@ -121,4 +186,8 @@ export const CountdownContent = styled.span`
     padding: 16px 0;
     font-weight: bold;
     text-align: center;
+
+    @media (max-width: ${breakpoints.celphone}) {
+        font-size: 54px;
+    }
 `
