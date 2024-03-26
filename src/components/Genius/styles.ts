@@ -2,19 +2,17 @@ import styled from "styled-components";
 import { Colors } from "../../styles";
 
 export const GeniusContainer = styled.div`
-    background-color: ${Colors.black};
     margin-top: 40px;
     padding: 24px;
     border-radius: 16px;
     width: 80%;
     position: relative;
-    box-shadow: 1px 1px 8px ${Colors.black};
 `
 
 export const GeniusContent = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    gap: 8px;
 
     div {
         padding: 120px;
@@ -22,13 +20,14 @@ export const GeniusContent = styled.div`
         transition: 0.2s ease;
 
         &:hover {
-            filter: brightness(160%);
+            filter: brightness(170%);
             transition: 0.2s ease;
+            transform: scale(1.02);
         }
     }
 `
 
-export const GameContent = styled.div`
+export const GameInfos = styled.div`
     position: absolute;
     left: 35%;
     top: 25%;
