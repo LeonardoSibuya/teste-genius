@@ -26,7 +26,6 @@ export const GeniusContent = styled.div`
         transition: 0.2s ease;
 
         &:hover {
-            filter: brightness(170%);
             transition: 0.2s ease;
             transform: scale(1.02);
         }
