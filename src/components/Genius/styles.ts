@@ -117,7 +117,7 @@ export const GameInfos = styled.div`
     }
 
     @media (max-width: ${breakpoints.celphone}) {
-        left: 33%;
+        left: 30%;
         top: 30%;
         height: 120px;
         width: 120px;

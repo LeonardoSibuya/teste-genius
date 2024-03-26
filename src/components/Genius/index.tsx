@@ -15,31 +15,30 @@ const Genius = () => {
     const [playIndex, setPlayIndex] = useState(0)
     const [points, setPoints] = useState(0)
     const [sequence, setSequence] = useState<string[]>([])
-    // const [audio, setAudio] = useState(new Audio('https://cdn.pixabay.com/audio/2022/12/17/audio_43e9af63f3.mp3'));
-
-
-    interface SoundMap {
-        [key: string]: HTMLAudioElement;
-    }
-    const sounds: SoundMap = {
-        green: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound1.mp3"),
-        red: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound2.mp3"),
-        yellow: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"),
-        blue: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound3.mp3"),
-    };
-
-    const soundError = new Audio(erroSound)
-
-    const colors = ["green", "red", "yellow", "blue"]
 
     const greenRef = useRef(null)
     const redRef = useRef(null)
     const yellowRef = useRef(null)
     const blueRef = useRef(null)
 
-    const randomColor = () => {
+
+    interface SoundMap {
+        [key: string]: HTMLAudioElement
+    }
+    const sounds: SoundMap = {
+        green: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound1.mp3"),
+        red: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound2.mp3"),
+        yellow: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"),
+        blue: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound3.mp3"),
+    }
+
+    const soundError = new Audio(erroSound)
+
+    const colors = ["green", "red", "yellow", "blue"]
+
+    const randomColorSequence = () => {
         const color = colors[Math.floor(Math.random() * 4)]
-        const newSequence = [...sequence, color];
+        const newSequence = [...sequence, color]
         setSequence(newSequence)
     }
 
@@ -51,14 +50,14 @@ const Genius = () => {
             setGameStarted(false)
             alert('O nome inserido é muito grande')
         } else {
-            setCountdown(3);
+            setCountdown(3)
             setGameStarted(true)
-            randomColor();
+            randomColorSequence()
         }
     }
 
     const restartGame = () => {
-        window.location.reload();
+        window.location.reload()
     }
 
     const finishGame = () => {
@@ -70,109 +69,109 @@ const Genius = () => {
     const getColorBoxRef = (color: string): React.RefObject<HTMLDivElement> | null => {
         switch (color) {
             case "green":
-                return greenRef;
+                return greenRef
             case "red":
-                return redRef;
+                return redRef
             case "yellow":
-                return yellowRef;
+                return yellowRef
             case "blue":
-                return blueRef;
+                return blueRef
             default:
-                return null;
+                return null
         }
-    };
+    }
 
     const handleClick = (color: string) => {
         if (gameStarted && countdown <= 0) {
             const colorBoxRef = getColorBoxRef(color)
 
             if (colorBoxRef && colorBoxRef.current) {
-                const sound = sounds[color];
-                sound.play();
+                const sound = sounds[color]
+                sound.play()
 
-                colorBoxRef.current.style.filter = "brightness(170%)";
+                colorBoxRef.current.style.filter = "brightness(170%)"
 
                 setTimeout(() => {
                     if (colorBoxRef && colorBoxRef.current) {
-                        colorBoxRef.current.style.filter = "brightness(100%)";
+                        colorBoxRef.current.style.filter = "brightness(100%)"
 
                         if (sequence[playIndex] === color) {
                             if (playIndex === sequence.length - 1) {
                                 setTimeout(() => {
                                     setPlayIndex(0)
-                                    randomColor()
-                                }, 300);
+                                    randomColorSequence()
+                                }, 250)
                             } else {
-                                setPlayIndex(playIndex + 1);
+                                setPlayIndex(playIndex + 1)
                             }
 
                             setPoints(points + 1)
                         } else {
-                            finishGame();
-                            soundError.play();
+                            finishGame()
+                            soundError.play()
                         }
                     }
-                }, 300);
+                }, 250)
             }
         }
-    };
+    }
 
     useEffect(() => {
         if (gameStarted && countdown > 0) {
             const timer = setTimeout(() => {
-                setCountdown(countdown - 1);
-            }, 1000);
+                setCountdown(countdown - 1)
+            }, 1000)
 
-            return () => clearTimeout(timer);
+            return () => clearTimeout(timer)
         }
-    }, [countdown, gameStarted]);
+    }, [countdown, gameStarted])
 
     useEffect(() => {
         const showSequence = (index = 0) => {
-            let ref: RefObject<HTMLDivElement> | null = null;
+            let ref: RefObject<HTMLDivElement> | null = null
 
             if (sequence[index] === "green") {
-                ref = greenRef;
-                const sound = sounds[sequence[index]];
+                ref = greenRef
+                const sound = sounds[sequence[index]]
                 sound.play()
             } else if (sequence[index] === "red") {
-                ref = redRef;
-                const sound = sounds[sequence[index]];
+                ref = redRef
+                const sound = sounds[sequence[index]]
                 sound.play()
             } else if (sequence[index] === "yellow") {
-                ref = yellowRef;
-                const sound = sounds[sequence[index]];
+                ref = yellowRef
+                const sound = sounds[sequence[index]]
                 sound.play()
             } else if (sequence[index] === "blue") {
-                ref = blueRef;
-                const sound = sounds[sequence[index]];
+                ref = blueRef
+                const sound = sounds[sequence[index]]
                 sound.play()
             }
 
             setTimeout(() => {
                 if (ref && ref.current) {
-                    ref.current.style.filter = "brightness(170%)";
+                    ref.current.style.filter = "brightness(170%)"
 
                     setTimeout(() => {
                         if (ref && ref.current) {
-                            ref.current.style.filter = "brightness(100%)";
+                            ref.current.style.filter = "brightness(100%)"
 
                             if (index < sequence.length - 1) {
-                                showSequence(index + 1);
+                                showSequence(index + 1)
                             } else {
-                                setPlayIndex(0);
+                                setPlayIndex(0)
                             }
                         }
-                    }, 400);
+                    }, 500)
                 }
-            }, 400);
-        };
+            }, 500)
+        }
 
         if (countdown === 0 && sequence.length > 0) {
-            showSequence();
+            showSequence()
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sequence, gameStarted, sounds.greenBox, sounds.redBox, sounds.yellowBox, sounds.blueBox, countdown]);
+    }, [sequence, gameStarted, sounds.greenBox, sounds.redBox, sounds.yellowBox, sounds.blueBox, countdown])
 
 
     return (
