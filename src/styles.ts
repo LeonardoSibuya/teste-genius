@@ -9,7 +9,7 @@ export const Colors = {
     lightgreen: '#00f20c',
     white: '#fff',
     black: '#000',
-    gray: '#CFD8DC'
+    gray: '#b3b4b5'
 }
 
 export const breakpoints = {

@@ -45,20 +45,50 @@ export const GameInfos = styled.div`
     width: 280px;
 
     input {
+        transition: 0.2s;
+
         &::placeholder {
-            color: ${Colors.black};
+            color: ${Colors.gray};
+        }
+
+        &:hover {
+            transform: scale(1.03);
+            transition: 0.2s;
+            color: ${Colors.white};
         }
 
         &:focus {
+                transform: scale(1.03);
+                transition: 0.4s;
+                border-color: ${Colors.gray};
+
                 &::placeholder {
-                    color: ${Colors.white}
+                    color: transparent
                 }
             }
     }
 
     button {
+        transition: 0.4s;
+
         &:hover {
             filter: brightness(120%);
+            transform: scale(1.03);
+            transition: 0.4s;
+        }
+
+        &.restartButton {
+            &:hover {
+                background-color: ${Colors.red};
+                color: ${Colors.white};
+            }
+        }
+
+        &.playAgainButton {
+            &:hover {
+                background-color: ${Colors.green};
+                color: ${Colors.white};
+            }
         }
     }
 
