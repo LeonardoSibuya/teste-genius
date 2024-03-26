@@ -3,9 +3,10 @@ import { Colors } from "../../styles";
 
 export const GeniusContainer = styled.div`
     background-color: ${Colors.black};
+    margin-top: 40px;
     padding: 24px;
     border-radius: 16px;
-    width: 60%;
+    width: 80%;
     position: relative;
     box-shadow: 1px 1px 8px ${Colors.black};
 `
@@ -16,7 +17,7 @@ export const GeniusContent = styled.div`
     gap: 24px;
 
     div {
-        padding: 100px;
+        padding: 120px;
         cursor: pointer;
         transition: 0.2s ease;
 
@@ -29,7 +30,7 @@ export const GeniusContent = styled.div`
 
 export const GameContent = styled.div`
     position: absolute;
-    left: 33%;
+    left: 35%;
     top: 25%;
 
     display: flex;
@@ -40,8 +41,9 @@ export const GameContent = styled.div`
 
     background-color: ${Colors.black};
     border-radius: 50%;
-    height: 220px;
-    width: 220px;
+    border: 2px solid ${Colors.gray};
+    height: 280px;
+    width: 280px;
 
     input {
         &::placeholder {
@@ -57,7 +59,37 @@ export const GameContent = styled.div`
 
     button {
         &:hover {
-            filter: brightness(100%);
+            filter: brightness(120%);
         }
     }
+
+    p {
+        font-size: 20px;
+        color: ${Colors.white};
+        padding: 16px 0;
+        font-weight: bold;
+    }
+`
+
+export const PlayerPoints = styled.p`
+    font-size: 20px;
+    color: ${Colors.white};
+    padding: 16px 0;
+    font-weight: bold;
+    text-align: center;
+
+    span {
+        display: block;
+        margin-top: 4px;
+        font-size: 54px;
+        color: ${Colors.lightgreen};
+    }
+`
+
+export const CountdownContent = styled.span`
+    font-size: 80px;
+    color: ${Colors.white};
+    padding: 16px 0;
+    font-weight: bold;
+    text-align: center;
 `
