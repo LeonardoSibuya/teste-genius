@@ -30,7 +30,7 @@ Para jogar o Genius, siga os passos abaixo:
 
 Divirta-se jogando o Genius Game!
 
-## Testes Automatizados com Cypress
+## Testes Automatizados com Cypress ^12.6.0
 
 Para executar os testes automatizados com o Cypress, siga os passos abaixo:
 
