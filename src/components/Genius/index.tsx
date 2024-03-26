@@ -131,20 +131,22 @@ const Genius = () => {
         const showSequence = (index = 0) => {
             let ref: RefObject<HTMLDivElement> | null = null;
 
-            let sound: HTMLAudioElement | null = null;
-
             if (sequence[index] === "green") {
                 ref = greenRef;
-                sound = sounds.greenBox;
+                const sound = sounds[sequence[index]];
+                sound.play()
             } else if (sequence[index] === "red") {
                 ref = redRef;
-                sound = sounds.redBox;
+                const sound = sounds[sequence[index]];
+                sound.play()
             } else if (sequence[index] === "yellow") {
                 ref = yellowRef;
-                sound = sounds.yellowBox;
+                const sound = sounds[sequence[index]];
+                sound.play()
             } else if (sequence[index] === "blue") {
                 ref = blueRef;
-                sound = sounds.blueBox;
+                const sound = sounds[sequence[index]];
+                sound.play()
             }
 
             setTimeout(() => {
@@ -161,14 +163,15 @@ const Genius = () => {
                                 setPlayIndex(0);
                             }
                         }
-                    }, 300);
+                    }, 400);
                 }
-            }, 300);
+            }, 400);
         };
 
         if (countdown === 0 && sequence.length > 0) {
             showSequence();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sequence, gameStarted, sounds.greenBox, sounds.redBox, sounds.yellowBox, sounds.blueBox, countdown]);
 
 
