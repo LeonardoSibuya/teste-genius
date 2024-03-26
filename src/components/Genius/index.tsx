@@ -1,16 +1,30 @@
-import { useEffect, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 
 import * as S from './styles'
 
 import { Colors } from '../../styles'
 import { Box, Button, Input, } from '@chakra-ui/react'
 
-
 const Genius = () => {
     const [playerName, setPlayerName] = useState('')
     const [gameStarted, setGameStarted] = useState(false)
     const [gameFinished, setGameFinished] = useState(false)
     const [countdown, setCountdown] = useState(3)
+    const [sequence, setSequence] = useState<string[]>([])
+    const [playIndex, setPlayIndex] = useState(0)
+    // const [points, setPoints] = useState(0)
+    const colors = ["green", "red", "yellow", "blue"]
+
+    const greenRef = useRef(null)
+    const redRef = useRef(null)
+    const yellowRef = useRef(null)
+    const blueRef = useRef(null)
+
+    const randomColor = () => {
+        const color = colors[Math.floor(Math.random() * 4)]
+        const newSequence = [...sequence, color];
+        setSequence(newSequence)
+    }
 
     const startGame = () => {
         if (playerName.length <= 0) {
@@ -20,8 +34,9 @@ const Genius = () => {
             setGameStarted(false)
             alert('O nome inserido é muito grande')
         } else {
-            setGameStarted(true)
             setCountdown(3);
+            setGameStarted(true)
+            randomColor();
         }
     }
 
@@ -31,7 +46,53 @@ const Genius = () => {
 
     const finishGame = () => {
         setGameFinished(true)
+        setSequence([])
+        setPlayIndex(0)
     }
+
+    const getColorBoxRef = (color: string): React.RefObject<HTMLDivElement> | null => {
+        switch (color) {
+            case "green":
+                return greenRef;
+            case "red":
+                return redRef;
+            case "yellow":
+                return yellowRef;
+            case "blue":
+                return blueRef;
+            default:
+                return null;
+        }
+    };
+
+    const handleClick = (color: string) => {
+        if (gameStarted && countdown <= 0) {
+            const colorBoxRef = getColorBoxRef(color)
+
+            if (colorBoxRef && colorBoxRef.current) {
+                colorBoxRef.current.style.filter = "brightness(170%)";
+
+                setTimeout(() => {
+                    if (colorBoxRef && colorBoxRef.current) {
+                        colorBoxRef.current.style.filter = "brightness(100%)";
+
+                        if (sequence[playIndex] === color) {
+                            if (playIndex === sequence.length - 1) {
+                                setTimeout(() => {
+                                    setPlayIndex(0)
+                                    randomColor()
+                                }, 300);
+                            } else {
+                                setPlayIndex(playIndex + 1);
+                            }
+                        } else {
+                            finishGame();
+                        }
+                    }
+                }, 300);
+            }
+        }
+    };
 
     useEffect(() => {
         if (gameStarted && countdown > 0) {
@@ -43,29 +104,68 @@ const Genius = () => {
         }
     }, [countdown, gameStarted]);
 
+    useEffect(() => {
+        const showSequence = (index = 0) => {
+            let ref: RefObject<HTMLDivElement> | null = null;
+
+            if (sequence[index] === "green") ref = greenRef;
+            else if (sequence[index] === "red") ref = redRef;
+            else if (sequence[index] === "yellow") ref = yellowRef;
+            else if (sequence[index] === "blue") ref = blueRef;
+
+            setTimeout(() => {
+                if (ref && ref.current) {
+                    ref.current.style.filter = "brightness(170%)";
+
+                    setTimeout(() => {
+                        if (ref && ref.current) {
+                            ref.current.style.filter = "brightness(100%)";
+
+                            if (index < sequence.length - 1) {
+                                showSequence(index + 1);
+                            } else {
+                                setPlayIndex(0);
+                            }
+                        }
+                    }, 300);
+                }
+            }, 300);
+        };
+
+        showSequence()
+    }, [sequence, gameStarted]);
+
     return (
         <S.GeniusContainer>
             <S.GeniusContent>
                 <Box
+                    ref={greenRef}
                     borderRadius="240px 10px 10px 10px"
                     backgroundColor={`${Colors.green}`}
+                    onClick={() => handleClick("green")}
+
                 />
                 <Box
+                    ref={redRef}
                     borderRadius="10px 240px 10px 10px"
                     backgroundColor={`${Colors.red}`}
-                    onClick={finishGame}
+                    onClick={() => handleClick("red")}
                 />
                 <Box
+                    ref={yellowRef}
                     borderRadius="10px 10px 10px 240px"
                     backgroundColor={`${Colors.yellow}`}
+                    onClick={() => handleClick("yellow")}
                 />
                 <Box
+                    ref={blueRef}
                     borderRadius="10px 10px 240px 10px"
                     backgroundColor={`${Colors.blue}`}
+                    onClick={() => handleClick("blue")}
                 />
             </S.GeniusContent>
 
-            <S.GameContent>
+            <S.GameInfos>
                 {gameFinished ? (
                     <>
                         <S.PlayerPoints>
@@ -172,7 +272,7 @@ const Genius = () => {
                         )}
                     </>
                 )}
-            </S.GameContent>
+            </S.GameInfos>
         </S.GeniusContainer >
     )
 }
