@@ -5,14 +5,31 @@ import * as S from './styles'
 import { Colors } from '../../styles'
 import { Box, Button, Input, } from '@chakra-ui/react'
 
+import erroSound from '../../assets/failure-drum-sound-effect-1-46093.mp3'
+
 const Genius = () => {
     const [playerName, setPlayerName] = useState('')
     const [gameStarted, setGameStarted] = useState(false)
     const [gameFinished, setGameFinished] = useState(false)
     const [countdown, setCountdown] = useState(3)
-    const [sequence, setSequence] = useState<string[]>([])
     const [playIndex, setPlayIndex] = useState(0)
-    // const [points, setPoints] = useState(0)
+    const [points, setPoints] = useState(0)
+    const [sequence, setSequence] = useState<string[]>([])
+    // const [audio, setAudio] = useState(new Audio('https://cdn.pixabay.com/audio/2022/12/17/audio_43e9af63f3.mp3'));
+
+
+    interface SoundMap {
+        [key: string]: HTMLAudioElement;
+    }
+    const sounds: SoundMap = {
+        green: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound1.mp3"),
+        red: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound2.mp3"),
+        yellow: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"),
+        blue: new Audio("https://s3.amazonaws.com/freecodecamp/simonSound3.mp3"),
+    };
+
+    const soundError = new Audio(erroSound)
+
     const colors = ["green", "red", "yellow", "blue"]
 
     const greenRef = useRef(null)
@@ -70,6 +87,9 @@ const Genius = () => {
             const colorBoxRef = getColorBoxRef(color)
 
             if (colorBoxRef && colorBoxRef.current) {
+                const sound = sounds[color];
+                sound.play();
+
                 colorBoxRef.current.style.filter = "brightness(170%)";
 
                 setTimeout(() => {
@@ -85,8 +105,11 @@ const Genius = () => {
                             } else {
                                 setPlayIndex(playIndex + 1);
                             }
+
+                            setPoints(points + 1)
                         } else {
                             finishGame();
+                            soundError.play();
                         }
                     }
                 }, 300);
@@ -108,10 +131,21 @@ const Genius = () => {
         const showSequence = (index = 0) => {
             let ref: RefObject<HTMLDivElement> | null = null;
 
-            if (sequence[index] === "green") ref = greenRef;
-            else if (sequence[index] === "red") ref = redRef;
-            else if (sequence[index] === "yellow") ref = yellowRef;
-            else if (sequence[index] === "blue") ref = blueRef;
+            let sound: HTMLAudioElement | null = null;
+
+            if (sequence[index] === "green") {
+                ref = greenRef;
+                sound = sounds.greenBox;
+            } else if (sequence[index] === "red") {
+                ref = redRef;
+                sound = sounds.redBox;
+            } else if (sequence[index] === "yellow") {
+                ref = yellowRef;
+                sound = sounds.yellowBox;
+            } else if (sequence[index] === "blue") {
+                ref = blueRef;
+                sound = sounds.blueBox;
+            }
 
             setTimeout(() => {
                 if (ref && ref.current) {
@@ -132,36 +166,38 @@ const Genius = () => {
             }, 300);
         };
 
-        showSequence()
-    }, [sequence, gameStarted]);
+        if (countdown === 0 && sequence.length > 0) {
+            showSequence();
+        }
+    }, [sequence, gameStarted, sounds.greenBox, sounds.redBox, sounds.yellowBox, sounds.blueBox, countdown]);
+
 
     return (
         <S.GeniusContainer>
             <S.GeniusContent>
                 <Box
                     ref={greenRef}
-                    borderRadius="240px 10px 10px 10px"
+                    borderRadius="80px 10px 10px 10px"
                     backgroundColor={`${Colors.green}`}
-                    onClick={() => handleClick("green")}
-
+                    onClick={gameFinished ? undefined : () => handleClick("green")}
                 />
                 <Box
                     ref={redRef}
-                    borderRadius="10px 240px 10px 10px"
+                    borderRadius="10px 80px 10px 10px"
                     backgroundColor={`${Colors.red}`}
-                    onClick={() => handleClick("red")}
+                    onClick={gameFinished ? undefined : () => handleClick("red")}
                 />
                 <Box
                     ref={yellowRef}
-                    borderRadius="10px 10px 10px 240px"
+                    borderRadius="10px 10px 10px 80px"
                     backgroundColor={`${Colors.yellow}`}
-                    onClick={() => handleClick("yellow")}
+                    onClick={gameFinished ? undefined : () => handleClick("yellow")}
                 />
                 <Box
                     ref={blueRef}
-                    borderRadius="10px 10px 240px 10px"
+                    borderRadius="10px 10px 80px 10px"
                     backgroundColor={`${Colors.blue}`}
-                    onClick={() => handleClick("blue")}
+                    onClick={gameFinished ? undefined : () => handleClick("blue")}
                 />
             </S.GeniusContent>
 
@@ -171,24 +207,25 @@ const Genius = () => {
                         <S.PlayerPoints>
                             Sua pontuação final:
                             <span>
-                                160
+                                {points}
                             </span>
                         </S.PlayerPoints>
 
                         <Button
                             type="button"
+                            className="playAgainButton"
                             padding="12px"
                             width="60%"
                             textTransform="uppercase"
                             borderRadius="16px"
-                            border="none"
+                            border={`1px solid${Colors.green}`}
+                            color={`${Colors.green}`}
+                            backgroundColor="transparent"
                             letterSpacing="1px"
                             textAlign="center"
                             fontWeight="bold"
                             fontSize="12px"
-                            color={`${Colors.white}`}
                             textShadow="1px 1px 3px #000"
-                            backgroundColor={`${Colors.green}`}
                             cursor="pointer"
 
                             onClick={restartGame}
@@ -209,22 +246,23 @@ const Genius = () => {
                                 ) : (
                                     <>
                                         <p>
-                                            Boa Jogo, {playerName}!
+                                            Bom Jogo, {playerName}!
                                         </p>
 
                                         <Button
                                             type="button"
+                                            className="restartButton"
                                             padding="12px"
                                             width="50%"
                                             textTransform="uppercase"
                                             borderRadius="16px"
-                                            border="none"
+                                            border={`1px solid${Colors.red}`}
+                                            color={`${Colors.red}`}
+                                            backgroundColor="transparent"
                                             letterSpacing="1px"
                                             textAlign="center"
                                             fontWeight="bold"
-                                            color={`${Colors.white}`}
                                             textShadow="1px 1px 3px #000"
-                                            backgroundColor={`${Colors.red}`}
                                             cursor="pointer"
 
                                             onClick={restartGame}
@@ -241,9 +279,11 @@ const Genius = () => {
                                     padding="16px"
                                     textAlign="center"
                                     borderRadius="16px 16px 0 0"
-                                    border="none"
-                                    fontWeight="bold"
-                                    color={`${Colors.black}`}
+                                    border={`1px solid ${Colors.blue}`}
+                                    fontWeight="normal"
+                                    letterSpacing="1px"
+                                    color={`${Colors.white}`}
+                                    backgroundColor={`${Colors.black}`}
                                     outline="none"
                                     width="80%"
                                     fontSize="18px"
